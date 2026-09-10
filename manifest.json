@@ -1,0 +1,9 @@
+{
+  "id": "com.victor.reacher.background",
+  "version": "1.0.0",
+  "name": "Reacher Background",
+  "description": "Fundo personalizado para Reacher",
+  "resources": ["meta"],
+  "types": ["series"],
+  "idPrefixes": ["tt"]
+}
