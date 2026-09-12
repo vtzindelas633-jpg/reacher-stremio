@@ -1,0 +1,42 @@
+name: Atualizar Reacher
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Buscar Cinemeta e trocar fundo
+        run: |
+          mkdir -p meta/series
+          curl -L "https://v3-cinemeta.strem.io/meta/series/tt9288030.json" -o /tmp/reacher.json
+
+          python3 - <<'PY'
+          import json
+
+          with open("/tmp/reacher.json", "r", encoding="utf-8") as f:
+              data = json.load(f)
+
+          meta = data["meta"]
+
+          meta["id"] = "rch-reacher"
+          meta["background"] = "https://raw.githubusercontent.com/vtzindelas633-jpg/reacher-stremio/main/reacher._TTW_.jpg"
+
+          with open("meta/series/rch-reacher.json", "w", encoding="utf-8") as f:
+              json.dump({"meta": meta}, f, ensure_ascii=False, indent=2)
+          PY
+
+      - name: Salvar alteração
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add meta/series/rch-reacher.json
+          git commit -m "Atualizar Reacher" || exit 0
+          git push
